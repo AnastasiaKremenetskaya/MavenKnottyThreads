@@ -1,15 +1,12 @@
 package knottythreadsgame.model;
 
+import knottythreadsgame.events.KnotMovementsListener;
 import knottythreadsgame.view.GameField;
 import org.jetbrains.annotations.NotNull;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class GameModel implements MouseListener {
-//    private final int EASY_KNOTS_AMOUNT = 6;
-//    private final int MEDIUM_KNOTS_AMOUNT = 6;
-//    private final int HARD_KNOTS_AMOUNT = 6;
-//    private final int IMPOSSIBLE_KNOTS_AMOUNT = 6;
+public class GameModel {
     private static GameModel instance;
 
     private static String difficultyLevel;
@@ -19,15 +16,24 @@ public class GameModel implements MouseListener {
     private GameModel(String difficultyLevel) {
         GameModel.difficultyLevel = difficultyLevel;
         this.gameField = new GameField();
+
+        // "Следим" за схемой
+        SchemaObserver schemaObserver = new SchemaObserver();
+
         generateSchema();
         generateField();
     }
 
     public static GameModel getInstance(@NotNull String difficultyLevel){
-        if(instance == null){		//если объект еще не создан
-            instance = new GameModel(difficultyLevel);	//создать новый объект
+        //Если объект еще не создан
+        if(instance == null) {
+
+            //Создать новый объект
+            instance = new GameModel(difficultyLevel);
         }
-        return instance;		// вернуть ранее созданный объект
+
+        //Вернуть ранее созданный объект
+        return instance;
     }
 
     // ------------ Задаем обстановку и следим за окончанием игры  ------------
@@ -52,28 +58,41 @@ public class GameModel implements MouseListener {
         return schema;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
+    private static class SchemaObserver implements KnotMovementsListener {
 
-    }
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
 
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
+        }
 
-    }
+        @Override
+        public void mousePressed(MouseEvent mouseEvent) {
 
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
+        }
 
-    }
+        @Override
+        public void mouseReleased(MouseEvent mouseEvent) {
 
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
+        }
 
-    }
+        @Override
+        public void mouseEntered(MouseEvent mouseEvent) {
 
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
+        }
 
+        @Override
+        public void mouseExited(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent mouseEvent) {
+
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent mouseEvent) {
+
+        }
     }
 }
