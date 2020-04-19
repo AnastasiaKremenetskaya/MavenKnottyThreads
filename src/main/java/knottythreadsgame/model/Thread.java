@@ -5,8 +5,11 @@ public class Thread {
     private Knot secondKnot;
 
     public Thread(Knot firstKnot, Knot secondKnot) {
-        this.firstKnot = firstKnot;
-        this.secondKnot = secondKnot;
+        if (firstKnot != secondKnot) {
+            this.firstKnot = firstKnot;
+            this.secondKnot = secondKnot;
+        } else
+            throw new IllegalArgumentException("Error: Thread's knots are identical");
     }
 
     public Knot getFirstKnot() {
