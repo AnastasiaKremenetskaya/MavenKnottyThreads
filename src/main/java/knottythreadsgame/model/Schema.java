@@ -11,16 +11,41 @@ import java.util.List;
 import java.util.Random;
 
 public class Schema {
-    private final int FIELD_WIDTH = 50;
-    private final int FIELD_HEIGHT = 50;
-
     private List<Thread> threads = new ArrayList<>();
     private List<Knot> knots = new ArrayList<>();
 
+    /**
+     * @param difficultyLevel уровень сложности игры
+     */
     public void generateSchema(String difficultyLevel) {
         ReadJSON jsonReader = new ReadJSON();
 
         knots = new ArrayList<>(jsonReader.getPositionsFromJson(difficultyLevel));
+    }
+
+    /**
+     * Проверить, имеются ли пересекающиеся нити
+     *
+     * @return
+     */
+    public boolean hasCrossingThreads() {
+        for (Thread thread : threads) {
+            for (Thread otherTread : threads) {
+                if (thread.isCrossing(otherTread)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Передвинуть узел
+     *
+     * @return
+     */
+    public boolean moveKnot() {
+        return true;
     }
 
     public List<Thread> getThreads() {
@@ -30,4 +55,5 @@ public class Schema {
     public List<Knot> getKnots() {
         return this.knots;
     }
+
 }
