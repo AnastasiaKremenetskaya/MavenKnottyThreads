@@ -43,9 +43,9 @@ public class GameModel {
     }
 
     private boolean generateSchema() {
-        schema = new Schema();
+        SchemaFactory factory = new SchemaFactory();
 
-        schema.generateSchema(this.difficultyLevel);
+        this.schema = factory.getSchemaFromJson(this.difficultyLevel);
 
         return true;
     }

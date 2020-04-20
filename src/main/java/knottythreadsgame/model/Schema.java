@@ -1,26 +1,16 @@
 package knottythreadsgame.model;
 
 import knottythreadsgame.json_handler.ReadJSON;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class Schema {
     private List<Thread> threads = new ArrayList<>();
     private List<Knot> knots = new ArrayList<>();
 
-    /**
-     * @param difficultyLevel уровень сложности игры
-     */
-    public void generateSchema(String difficultyLevel) {
-        ReadJSON jsonReader = new ReadJSON();
-
-        knots = new ArrayList<>(jsonReader.getPositionsFromJson(difficultyLevel));
+    public Schema(List<Knot> knots) {
+        this.knots.addAll(knots);
     }
 
     /**

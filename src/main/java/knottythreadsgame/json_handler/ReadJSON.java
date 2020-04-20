@@ -15,23 +15,28 @@ import org.json.simple.parser.ParseException;
 
 public class ReadJSON {
 
+    /**
+     *
+     * @param difficultyLevel выбранный уровень сложности
+     * @return
+     */
     @SuppressWarnings("unchecked")
-    public List<Knot> getPositionsFromJson(String DifficultyLevel)
+    public List<Knot> getPositionsFromJson(String difficultyLevel)
     {
         List<Knot> knots = new ArrayList<>();
 
-        JSONArray requiredLevelKnotsList = null;
+        JSONArray requiredLevelKnotsList;
 
         //JSON parser object to parse read file
         JSONParser jsonParser = new JSONParser();
 
-        try (FileReader reader = new FileReader("knots_positions.json"))
+        try (FileReader reader = new FileReader("src/main/resources/knots_positions.json"))
         {
             //Read JSON file
             JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
             //Считать из него позиции для нужного уровня
-            requiredLevelKnotsList = (JSONArray) jsonObject.get(DifficultyLevel);
+            requiredLevelKnotsList = (JSONArray) jsonObject.get(difficultyLevel);
 
             //Распарсить позицию каждого узла в контейнер узлов
             parsePositionToArrayList(requiredLevelKnotsList, knots);
@@ -47,6 +52,11 @@ public class ReadJSON {
         return knots;
     }
 
+    /**
+     *
+     * @param requiredLevelKnotsList уровень, для которого необходимо считать данные
+     * @param knots контейнер узлов
+     */
     private static void parsePositionToArrayList(JSONArray requiredLevelKnotsList, List<Knot>knots)
     {
         Iterator<Point2D> iterator = requiredLevelKnotsList.iterator();
