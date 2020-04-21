@@ -1,12 +1,14 @@
 package knottythreadsgame.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.geom.Point2D;
 
 public class Thread {
     private Knot firstKnot;
     private Knot secondKnot;
 
-    public Thread(Knot firstKnot, Knot secondKnot) {
+    public Thread(@NotNull Knot firstKnot,@NotNull Knot secondKnot) {
         if (firstKnot != secondKnot) {
             this.firstKnot = firstKnot;
             this.secondKnot = secondKnot;

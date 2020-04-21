@@ -1,10 +1,14 @@
 package knottythreadsgame.model;
 
-import knottythreadsgame.events.KnotMovementsListener;
 import knottythreadsgame.view.GameField;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import javax.swing.text.Position;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Point2D;
 
 public class GameModel {
     private static GameModel instance;
@@ -15,7 +19,6 @@ public class GameModel {
 
     private GameModel(String difficultyLevel) {
         GameModel.difficultyLevel = difficultyLevel;
-        this.gameField = new GameField();
 
         // "Следим" за схемой
         SchemaObserver schemaObserver = new SchemaObserver();
@@ -24,7 +27,7 @@ public class GameModel {
         generateField();
     }
 
-    public static GameModel getInstance(@NotNull String difficultyLevel){
+    public static GameModel start(@NotNull String difficultyLevel){
         //Если объект еще не создан
         if(instance == null) {
 
@@ -37,28 +40,32 @@ public class GameModel {
     }
 
     // ------------ Задаем обстановку и следим за окончанием игры  ------------
-
-    private void generateField() {
-        this.gameField.drawSchema(schema);
-    }
-
-    private boolean generateSchema() {
+    private void generateSchema() {
         SchemaFactory factory = new SchemaFactory();
 
         this.schema = factory.getSchemaFromJson(this.difficultyLevel);
-
-        return true;
     }
 
-    public String getDifficultyLevel() {
-        return difficultyLevel;
+
+    private void generateField() {
+        this.gameField = new GameField();
+        this.gameField.drawSchema(schema);
     }
 
-    public Schema getSchema() {
-        return schema;
+    private void identifyGameSituation(MouseEvent mouseEvent) {
+        Point2D mousePos = new Point2D.Double(mouseEvent.getX(), mouseEvent.getY());
+
+        for (Knot knot : schema.getKnots()){
+            if (knot.getPosition().distance(mousePos) <= 10) {
+                if (!knot.setPosition(mousePos)) {
+                    gameField.notifyAboutThreadTearing();
+                    gameField.onExit();
+                }
+            }
+        }
     }
 
-    private static class SchemaObserver implements KnotMovementsListener {
+    private class SchemaObserver implements MouseMotionListener, MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
@@ -67,7 +74,7 @@ public class GameModel {
 
         @Override
         public void mousePressed(MouseEvent mouseEvent) {
-
+            identifyGameSituation(mouseEvent);
         }
 
         @Override
