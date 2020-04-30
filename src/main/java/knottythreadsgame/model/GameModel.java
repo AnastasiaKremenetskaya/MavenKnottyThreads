@@ -1,14 +1,12 @@
 package knottythreadsgame.model;
 
+import knottythreadsgame.listeners.GameModelEventListener;
+import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.view.GameField;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-import javax.swing.text.Position;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 public class GameModel {
     private static GameModel instance;
@@ -17,19 +15,21 @@ public class GameModel {
     private Schema schema;
     private GameField gameField;
 
+    private SchemaObserver schemaObserver;
+
     private GameModel(String difficultyLevel) {
         GameModel.difficultyLevel = difficultyLevel;
 
-        // "Следим" за схемой
-        SchemaObserver schemaObserver = new SchemaObserver();
-
         generateSchema();
         generateField();
+
+        // "Следим" за схемой
+        this.schemaObserver = new SchemaObserver();
     }
 
-    public static GameModel start(@NotNull String difficultyLevel){
+    public static GameModel start(@NotNull String difficultyLevel) {
         //Если объект еще не создан
-        if(instance == null) {
+        if (instance == null) {
 
             //Создать новый объект
             instance = new GameModel(difficultyLevel);
@@ -39,67 +39,67 @@ public class GameModel {
         return instance;
     }
 
+    public Schema getSchema() {
+        return this.schema;
+    }
+
+    // ------------ Обработка действий пользователя мышью  ------------
+    //TODO вынести в контроллер?
+    public void takeKnot(Point2D.Double position) {
+        schema.getSelectedKnot(position);
+    }
+
+    public void observeKnotDragging(Point2D.Double position) {
+        schema.dragSelectedKnot(position);
+    }
+
+    public void releaseKnot() {
+        schema.releaseSelectedKnot();
+    }
+
     // ------------ Задаем обстановку и следим за окончанием игры  ------------
     private void generateSchema() {
         SchemaFactory factory = new SchemaFactory();
 
-        this.schema = factory.getSchemaFromJson(this.difficultyLevel);
+        this.schema = factory.getSchemaFromJson(difficultyLevel);
+        this.schema.addSchemaListener(this.schemaObserver);
     }
-
 
     private void generateField() {
-        this.gameField = new GameField();
-        this.gameField.drawSchema(schema);
+        this.gameField = new GameField(this);
     }
 
-    private void identifyGameSituation(MouseEvent mouseEvent) {
-        Point2D mousePos = new Point2D.Double(mouseEvent.getX(), mouseEvent.getY());
+    // ---------------------- Порождает события -----------------------------
+    ArrayList<GameModelEventListener> gameModelEventListeners = new ArrayList();
 
-        for (Knot knot : schema.getKnots()){
-            if (knot.getPosition().distance(mousePos) <= 10) {
-                if (!knot.setPosition(mousePos)) {
-                    gameField.notifyAboutThreadTearing();
-                    gameField.onExit();
-                }
+    public void addGameModelListener(GameModelEventListener l) {
+        gameModelEventListeners.add(l);
+    }
+
+    public void deleteGameModelListener(GameModelEventListener l) {
+        gameModelEventListeners.remove(l);
+    }
+
+    private class SchemaObserver implements SchemaEventListener {
+        @Override
+        public void treadReachedMaxLength() {
+            for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
+                gameModelEventListener.treadReachedMaxLength();
             }
         }
-    }
-
-    private class SchemaObserver implements MouseMotionListener, MouseListener {
 
         @Override
-        public void mouseClicked(MouseEvent mouseEvent) {
-
+        public void treadTeared() {
+            for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
+                gameModelEventListener.gameFailed();
+            }
         }
 
         @Override
-        public void mousePressed(MouseEvent mouseEvent) {
-            identifyGameSituation(mouseEvent);
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseDragged(MouseEvent mouseEvent) {
-
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent mouseEvent) {
-
+        public void noCrossings() {
+            for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
+                gameModelEventListener.gameCompleted();
+            }
         }
     }
 }

@@ -24,5 +24,12 @@ public class Knot {
 
     public void setPosition(Point2D position) {
         this.position = position;
+
+        for (Thread thread : threads) {
+            //Проверить ограничения для рвущихся нитей
+            if (thread instanceof TearingThread) {
+                ((TearingThread) thread).checkTreadState();
+            }
+        }
     }
 }
