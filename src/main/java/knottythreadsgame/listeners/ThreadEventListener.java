@@ -1,6 +1,6 @@
 package knottythreadsgame.listeners;
 
-public interface TreadEventListener {
+public interface ThreadEventListener {
     void treadTeared();
     void treadReachedMaxLength();
 }

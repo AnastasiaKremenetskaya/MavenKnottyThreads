@@ -1,6 +1,6 @@
 package knottythreadsgame.model;
 
-import knottythreadsgame.listeners.TreadEventListener;
+import knottythreadsgame.listeners.ThreadEventListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -21,27 +21,27 @@ public class TearingThread extends Thread {
 
     public void checkTreadState() {
         if (this.length() >= this.maxLength) {
-            for (TreadEventListener treadEventListener : treadEventListeners) {
-                treadEventListener.treadTeared();
+            for (ThreadEventListener threadEventListener : threadEventListeners) {
+                threadEventListener.treadTeared();
             }
         }
 
         //Если оставшаяся длина составляет менее трети от исходной
         else if (this.maxLength - this.length() <= this.maxLength/3) {
-            for (TreadEventListener treadEventListener : treadEventListeners) {
-                treadEventListener.treadReachedMaxLength();
+            for (ThreadEventListener threadEventListener : threadEventListeners) {
+                threadEventListener.treadReachedMaxLength();
             }
         }
     }
 
     // ---------------------- Порождает события -----------------------------
-    ArrayList<TreadEventListener> treadEventListeners = new ArrayList();
+    ArrayList<ThreadEventListener> threadEventListeners = new ArrayList();
 
-    public void addGameModelListener(TreadEventListener l) {
-        treadEventListeners.add(l);
+    public void addThreadListener(ThreadEventListener l) {
+        threadEventListeners.add(l);
     }
 
-    public void deleteGameModelListener(TreadEventListener l) {
-        treadEventListeners.remove(l);
+    public void deleteThreadListener(ThreadEventListener l) {
+        threadEventListeners.remove(l);
     }
 }

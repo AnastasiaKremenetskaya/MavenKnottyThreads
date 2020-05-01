@@ -18,6 +18,10 @@ public class Knot {
         return position;
     }
 
+    public void addThread(Thread thread) {
+        this.threads.add(thread);
+    }
+
     public List<Thread> getThreads() {
         return this.threads;
     }
