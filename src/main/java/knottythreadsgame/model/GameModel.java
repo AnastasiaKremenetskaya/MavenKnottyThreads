@@ -43,20 +43,6 @@ public class GameModel {
         return this.schema;
     }
 
-    // ------------ Обработка действий пользователя мышью  ------------
-    //TODO вынести в контроллер?
-    public void takeKnot(Point2D.Double position) {
-        schema.getSelectedKnot(position);
-    }
-
-    public void observeKnotDragging(Point2D.Double position) {
-        schema.dragSelectedKnot(position);
-    }
-
-    public void releaseKnot() {
-        schema.releaseSelectedKnot();
-    }
-
     // ------------ Задаем обстановку и следим за окончанием игры  ------------
     private void generateSchema() {
         SchemaFactory factory = new SchemaFactory();
