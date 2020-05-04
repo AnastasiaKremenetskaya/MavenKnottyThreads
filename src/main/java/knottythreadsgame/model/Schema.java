@@ -16,14 +16,15 @@ public class Schema {
 
     private ThreadObserver threadObserver;
 
-    public Schema(List<Knot> knots) {
-        for (Knot knot: knots){
+    public Schema(List<Knot> knots, List<Thread> threads) {
+        for (Knot knot : knots) {
             System.out.println("Generated knot position: " + knot.getPosition());
         }
 
         this.knots.addAll(knots);
-        this.connectKnots();
-        this.threadObserver = new ThreadObserver();
+        this.threads.addAll(threads);
+
+        this.addObserversToTearingThreads();
     }
 
     /**
@@ -61,7 +62,9 @@ public class Schema {
      * Отпустить узел
      */
     public void releaseSelectedKnot() {
-        System.out.println("moved to " + currentKnot.getPosition());
+        if (currentKnot != null) {
+            System.out.println("moved to " + currentKnot.getPosition());
+        }
 
         currentKnot = null;
 
@@ -78,44 +81,6 @@ public class Schema {
 
     public List<Knot> getKnots() {
         return this.knots;
-    }
-
-    private void connectKnots() {
-        //Для уровней easy и medium генерируем растягиваемые нити
-        if (knots.size() < Constants.HARD_KNOTS_AMOUNT) {
-            Thread newThread;
-
-            for (int i = 0; i < knots.size() - 1; i++) {
-                newThread = new Thread(knots.get(i), knots.get(i + 1));
-                this.threads.add(newThread);
-                knots.get(i).addThread(newThread);
-                knots.get(i + 1).addThread(newThread);
-            }
-            //Соединить начальный и конечный узел
-            newThread = new Thread(knots.get(0), knots.get(knots.size() - 1));
-            this.threads.add(newThread);
-            knots.get(0).addThread(newThread);
-            knots.get(knots.size() - 1).addThread(newThread);
-        }
-
-        //Для прочих - рвущиеся
-        else {
-            TearingThread newThread;
-
-            for (int i = 0; i < knots.size() - 1; i++) {
-                newThread = new TearingThread(knots.get(i), knots.get(i + 1), Constants.THREAD_MAX_LENGTH);
-                newThread.addThreadListener(this.threadObserver);
-                this.threads.add(newThread);
-                knots.get(i).addThread(newThread);
-                knots.get(i + 1).addThread(newThread);
-            }
-            //Соединить начальный и конечный узел
-            newThread = new TearingThread(knots.get(0), knots.get(knots.size() - 1), Constants.THREAD_MAX_LENGTH);
-            newThread.addThreadListener(this.threadObserver);
-            this.threads.add(newThread);
-            knots.get(0).addThread(newThread);
-            knots.get(knots.size() - 1).addThread(newThread);
-        }
     }
 
     /**
@@ -139,6 +104,16 @@ public class Schema {
                 point2D.getX() < Constants.FIELD_WIDTH &&
                 point2D.getY() > -1 &&
                 point2D.getY() < Constants.FIELD_HEIGHT;
+    }
+
+    private void addObserversToTearingThreads() {
+        this.threadObserver = new ThreadObserver();
+
+        for (Thread thread : threads) {
+            if (thread instanceof TearingThread) {
+                ((TearingThread) thread).addThreadListener(this.threadObserver);
+            }
+        }
     }
 
     // ---------------------- Порождает события -----------------------------

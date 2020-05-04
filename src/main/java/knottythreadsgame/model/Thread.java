@@ -52,6 +52,7 @@ public class Thread {
 
     /**
      * Найти ориентацию по четырем точкам
+     *
      * @param x1
      * @param y1
      * @param x2
