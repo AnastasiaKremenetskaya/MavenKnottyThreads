@@ -9,5 +9,5 @@ public class Constants {
     public static final int HARD_KNOTS_AMOUNT = 10;
     public static final int IMPOSSIBLE_KNOTS_AMOUNT = 12;
 
-    public static final double THREAD_MAX_LENGTH = 300.0;
+    public static final double MAX_LENGTH_COEFFICIENT = 1.5;
 }

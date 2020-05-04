@@ -12,16 +12,13 @@ public class Knot {
         this.position = position;
     }
 
-    public Point2D getPosition() {
-        return position;
-    }
-
+    /**
+     * Добавить нить, принадлежащую узлу
+     *
+     * @param thread
+     */
     public void addThread(Thread thread) {
         this.threads.add(thread);
-    }
-
-    public List<Thread> getThreads() {
-        return this.threads;
     }
 
     public void setPosition(Point2D position) {
@@ -33,5 +30,9 @@ public class Knot {
                 ((TearingThread) thread).checkTreadState();
             }
         }
+    }
+
+    public Point2D getPosition() {
+        return position;
     }
 }
