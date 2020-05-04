@@ -3,10 +3,12 @@ package knottythreadsgame.model;
 import knottythreadsgame.listeners.ThreadEventListener;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class TearingThread extends Thread {
     private double maxLength;
+    private Color color = Color.BLACK;
 
     public TearingThread(@NotNull Knot firstKnot, @NotNull Knot secondKnot, double maxLength) {
         super(firstKnot, secondKnot);
@@ -20,6 +22,8 @@ public class TearingThread extends Thread {
     }
 
     public void checkTreadState() {
+        setDefaultColor();
+
         if (this.length() >= this.maxLength) {
             for (ThreadEventListener threadEventListener : threadEventListeners) {
                 threadEventListener.treadTeared();
@@ -28,10 +32,21 @@ public class TearingThread extends Thread {
 
         //Если оставшаяся длина составляет менее трети от исходной
         else if (this.maxLength - this.length() <= this.maxLength/3) {
-            for (ThreadEventListener threadEventListener : threadEventListeners) {
-                threadEventListener.treadReachedMaxLength();
-            }
+            System.out.println("Watch out: the tread is ready to tear!");
+            setTearingColor();
         }
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    private void setTearingColor() {
+        this.color = Color.RED;
+    }
+
+    private void setDefaultColor() {
+        this.color = Color.BLACK;
     }
 
     // ---------------------- Порождает события -----------------------------

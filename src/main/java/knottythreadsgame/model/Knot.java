@@ -10,8 +10,6 @@ public class Knot {
 
     public Knot(Point2D position) {
         this.position = position;
-//        this.position = new Point2D.Double(Math.random() * (fieldWidth - 0 + 1) + 0,
-//                Math.random() * (fieldHeight - 0 + 1) + 0);
     }
 
     public Point2D getPosition() {

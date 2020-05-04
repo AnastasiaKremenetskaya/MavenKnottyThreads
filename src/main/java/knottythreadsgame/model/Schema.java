@@ -1,5 +1,6 @@
 package knottythreadsgame.model;
 
+import knottythreadsgame.constants.Constants;
 import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.listeners.ThreadEventListener;
 
@@ -8,12 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Schema {
-    private static final int EASY_KNOTS_AMOUNT = 6;
-    private static final int MEDIUM_KNOTS_AMOUNT = 8;
-    private static final int HARD_KNOTS_AMOUNT = 10;
-    private static final int IMPOSSIBLE_KNOTS_AMOUNT = 12;
-    private static final double THREAD_MAX_LENGTH = 11.0;
-
     private List<Thread> threads = new ArrayList<>();
     private List<Knot> knots = new ArrayList<>();
 
@@ -22,6 +17,10 @@ public class Schema {
     private ThreadObserver threadObserver;
 
     public Schema(List<Knot> knots) {
+        for (Knot knot: knots){
+            System.out.println("Generated knot position: " + knot.getPosition());
+        }
+
         this.knots.addAll(knots);
         this.connectKnots();
         this.threadObserver = new ThreadObserver();
@@ -32,13 +31,17 @@ public class Schema {
      *
      * @param newPos
      */
-    public void getSelectedKnot(Point2D newPos) {
+    public boolean getSelectedKnot(Point2D newPos) {
         for (Knot knot : this.knots) {
             if (knot.getPosition().distance(newPos) <= 10) {
+                System.out.println("Selected knot: " + knot.getPosition());
+
                 currentKnot = knot;
                 currentKnot.setPosition(newPos);
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -46,19 +49,23 @@ public class Schema {
      *
      * @param newPos
      */
-    public void dragSelectedKnot(Point2D newPos) {
-        if (currentKnot != null) {
+    public boolean dragSelectedKnot(Point2D newPos) {
+        if (currentKnot != null && belongsField(newPos)) {
             currentKnot.setPosition(newPos);
+            return true;
         }
+        return false;
     }
 
     /**
      * Отпустить узел
      */
     public void releaseSelectedKnot() {
+        System.out.println("moved to " + currentKnot.getPosition());
+
         currentKnot = null;
 
-        if (!hasCrossingThreads()) {
+        if (!this.hasCrossingThreads()) {
             for (SchemaEventListener schemaEventListener : schemaListeners) {
                 schemaEventListener.noCrossings();
             }
@@ -69,9 +76,13 @@ public class Schema {
         return this.threads;
     }
 
+    public List<Knot> getKnots() {
+        return this.knots;
+    }
+
     private void connectKnots() {
         //Для уровней easy и medium генерируем растягиваемые нити
-        if (knots.size() < HARD_KNOTS_AMOUNT) {
+        if (knots.size() < Constants.HARD_KNOTS_AMOUNT) {
             Thread newThread;
 
             for (int i = 0; i < knots.size() - 1; i++) {
@@ -79,7 +90,6 @@ public class Schema {
                 this.threads.add(newThread);
                 knots.get(i).addThread(newThread);
                 knots.get(i + 1).addThread(newThread);
-
             }
             //Соединить начальный и конечный узел
             newThread = new Thread(knots.get(0), knots.get(knots.size() - 1));
@@ -93,14 +103,14 @@ public class Schema {
             TearingThread newThread;
 
             for (int i = 0; i < knots.size() - 1; i++) {
-                newThread = new TearingThread(knots.get(i), knots.get(i + 1), THREAD_MAX_LENGTH);
+                newThread = new TearingThread(knots.get(i), knots.get(i + 1), Constants.THREAD_MAX_LENGTH);
                 newThread.addThreadListener(this.threadObserver);
                 this.threads.add(newThread);
                 knots.get(i).addThread(newThread);
                 knots.get(i + 1).addThread(newThread);
             }
             //Соединить начальный и конечный узел
-            newThread = new TearingThread(knots.get(0), knots.get(knots.size() - 1), THREAD_MAX_LENGTH);
+            newThread = new TearingThread(knots.get(0), knots.get(knots.size() - 1), Constants.THREAD_MAX_LENGTH);
             newThread.addThreadListener(this.threadObserver);
             this.threads.add(newThread);
             knots.get(0).addThread(newThread);
@@ -117,15 +127,22 @@ public class Schema {
         for (Thread thread : threads) {
             for (Thread otherTread : threads) {
                 if (thread.isCrossing(otherTread)) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
+    }
+
+    private boolean belongsField(Point2D point2D) {
+        return point2D.getX() > -1 &&
+                point2D.getX() < Constants.FIELD_WIDTH &&
+                point2D.getY() > -1 &&
+                point2D.getY() < Constants.FIELD_HEIGHT;
     }
 
     // ---------------------- Порождает события -----------------------------
-    ArrayList<SchemaEventListener> schemaListeners = new ArrayList();
+    private ArrayList<SchemaEventListener> schemaListeners = new ArrayList();
 
     public void addSchemaListener(SchemaEventListener l) {
         schemaListeners.add(l);
@@ -141,13 +158,6 @@ public class Schema {
         public void treadTeared() {
             for (SchemaEventListener schemaEventListener : schemaListeners) {
                 schemaEventListener.treadTeared();
-            }
-        }
-
-        @Override
-        public void treadReachedMaxLength() {
-            for (SchemaEventListener schemaEventListener : schemaListeners) {
-                schemaEventListener.treadReachedMaxLength();
             }
         }
     }

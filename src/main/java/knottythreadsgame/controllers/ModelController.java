@@ -18,8 +18,8 @@ public class ModelController {
      *
      * @param position
      */
-    public void takeKnot(Point2D.Double position) {
-        model.getSchema().getSelectedKnot(position);
+    public boolean takeKnot(Point2D.Double position) {
+        return model.getSchema().getSelectedKnot(position);
     }
 
     /**
@@ -27,8 +27,8 @@ public class ModelController {
      *
      * @param position
      */
-    public void observeKnotDragging(Point2D.Double position) {
-        model.getSchema().dragSelectedKnot(position);
+    public boolean observeKnotDragging(Point2D.Double position) {
+        return model.getSchema().dragSelectedKnot(position);
     }
 
     /**

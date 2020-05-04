@@ -5,7 +5,6 @@ import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.view.GameField;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class GameModel {
@@ -13,18 +12,12 @@ public class GameModel {
 
     private static String difficultyLevel;
     private Schema schema;
-    private GameField gameField;
-
-    private SchemaObserver schemaObserver;
 
     private GameModel(String difficultyLevel) {
         GameModel.difficultyLevel = difficultyLevel;
 
         generateSchema();
         generateField();
-
-        // "Следим" за схемой
-        this.schemaObserver = new SchemaObserver();
     }
 
     public static GameModel start(@NotNull String difficultyLevel) {
@@ -43,20 +36,24 @@ public class GameModel {
         return this.schema;
     }
 
+    public void clear() {
+        instance = null;
+    }
+
     // ------------ Задаем обстановку и следим за окончанием игры  ------------
     private void generateSchema() {
         SchemaFactory factory = new SchemaFactory();
 
         this.schema = factory.getSchemaFromJson(difficultyLevel);
-        this.schema.addSchemaListener(this.schemaObserver);
+        this.schema.addSchemaListener(new SchemaObserver());
     }
 
     private void generateField() {
-        this.gameField = new GameField(this);
+        new GameField(this);
     }
 
     // ---------------------- Порождает события -----------------------------
-    ArrayList<GameModelEventListener> gameModelEventListeners = new ArrayList();
+    private ArrayList<GameModelEventListener> gameModelEventListeners = new ArrayList();
 
     public void addGameModelListener(GameModelEventListener l) {
         gameModelEventListeners.add(l);
@@ -68,14 +65,9 @@ public class GameModel {
 
     private class SchemaObserver implements SchemaEventListener {
         @Override
-        public void treadReachedMaxLength() {
-            for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
-                gameModelEventListener.treadReachedMaxLength();
-            }
-        }
-
-        @Override
         public void treadTeared() {
+            System.out.println("Watch out: the tread is ready to tear!");
+
             for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
                 gameModelEventListener.gameFailed();
             }
@@ -83,6 +75,8 @@ public class GameModel {
 
         @Override
         public void noCrossings() {
+            System.out.println("Congrats! Mission completed!");
+
             for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
                 gameModelEventListener.gameCompleted();
             }
