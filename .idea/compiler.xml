@@ -10,4 +10,10 @@
       </profile>
     </annotationProcessing>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-Xplugin:Manifold  -processorpath $MAVEN_REPOSITORY$/systems/manifold/manifold-all/0.9-alpha/manifold-all-0.9-alpha.jar" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="KnottyThreads" options="" />
+    </option>
+  </component>
 </project>

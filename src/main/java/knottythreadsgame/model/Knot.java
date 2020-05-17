@@ -41,4 +41,8 @@ public class Knot {
     public Point2D getPosition() {
         return position;
     }
+
+    public List<Thread> getThreads() {
+        return this.threads;
+    }
 }

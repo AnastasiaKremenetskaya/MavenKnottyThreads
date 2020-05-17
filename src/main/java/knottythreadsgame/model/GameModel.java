@@ -66,8 +66,6 @@ public class GameModel {
     private class SchemaObserver implements SchemaEventListener {
         @Override
         public void treadTeared() {
-            System.out.println("Watch out: the tread is ready to tear!");
-
             for (GameModelEventListener gameModelEventListener : gameModelEventListeners) {
                 gameModelEventListener.gameFailed();
             }
