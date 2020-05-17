@@ -3,12 +3,12 @@ package knottythreadsgame.view;
 import knottythreadsgame.controllers.ModelController;
 import knottythreadsgame.listeners.GameModelEventListener;
 import knottythreadsgame.model.*;
-import knottythreadsgame.model.Thread;
+import knottythreadsgame.view.widgets.FieldWidget;
+import knottythreadsgame.view.widgets.WidgetFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 public class GameField extends JFrame {
@@ -16,17 +16,21 @@ public class GameField extends JFrame {
     private JPanel contentPane; //все игровое окно
     private JPanel gameSpace; //поле, в пределах которого перемещаются нити
 
-    private JPanel panelPlot; // Кастомная панель для отрисовки
+    private JPanel fieldWidget; // Кастомная панель для отрисовки
 
     private Schema schema;
     private GameModel model;
     private ModelController controller;
+
+    private WidgetFactory widgetFactory;
 
     public GameField(GameModel model) {
         this.model = model;
         this.controller = new ModelController(model);
 
         this.schema = this.model.getSchema();
+
+        this.widgetFactory = new WidgetFactory();
 
         //Frame init
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -35,10 +39,10 @@ public class GameField extends JFrame {
         pack();
         setResizable(false);
 
-        panelPlot = new MyPanel(this.schema);
-        panelPlot.setOpaque(true);
-        panelPlot.setBackground(Color.CYAN);
-        gameSpace.add(panelPlot);
+        fieldWidget = new FieldWidget(this.schema, this.widgetFactory);
+        fieldWidget.setOpaque(true);
+        fieldWidget.setBackground(Color.CYAN);
+        gameSpace.add(fieldWidget);
 
         //Добавить слушателей
         this.model.addGameModelListener(new GameModelObserver());
@@ -50,7 +54,7 @@ public class GameField extends JFrame {
             }
         });
 
-        panelPlot.addMouseListener(new MouseListener() {
+        fieldWidget.addMouseListener(new MouseListener() {
 
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -59,14 +63,14 @@ public class GameField extends JFrame {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 if (controller.takeKnot(new Point2D.Double(mouseEvent.getX(), mouseEvent.getY()))) {
-                    repaint();
+                    fieldWidget.repaint();
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent mouseEvent) {
                 controller.releaseKnot();
-                repaint();
+                fieldWidget.repaint();
             }
 
             @Override
@@ -80,11 +84,11 @@ public class GameField extends JFrame {
             }
         });
 
-        panelPlot.addMouseMotionListener(new MouseMotionListener() {
+        fieldWidget.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
                 controller.observeKnotDragging(new Point2D.Double(mouseEvent.getX(), mouseEvent.getY()));
-                repaint();
+                fieldWidget.repaint();
             }
 
             @Override
