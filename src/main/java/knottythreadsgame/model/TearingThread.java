@@ -7,36 +7,39 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class TearingThread extends Thread {
-    private double maxLength;
+public class TearingThread extends RestrictedThread {
     private Color color;
 
     public TearingThread(@NotNull Knot firstKnot, @NotNull Knot secondKnot) {
         super(firstKnot, secondKnot);
 
         this.setDefaultColor();
-        this.maxLength = this.getLength() * Constants.MAX_LENGTH_COEFFICIENT;
     }
 
     /**
      * Проверить состояние нити:
      * испустить событие в случае порватия, окраситься в случае максимального натяжения
      */
-    public void checkTreadState() {
+    public Constants.THREADS_STATES checkTreadState() {
         setDefaultColor();
 
-        if (this.getLength() >= this.maxLength) {
+        //Если достигнута максимальная длина
+        if (super.getLength() >= super.maxLength) {
             for (ThreadEventListener threadEventListener : threadEventListeners) {
                 System.out.println("Alas, the tread teared!");
                 threadEventListener.treadTeared();
+                return Constants.THREADS_STATES.TEARED;
             }
         }
 
-        //Если оставшаяся длина составляет менее трети от исходной
-        else if (this.maxLength - this.getLength() <= this.maxLength/3) {
-            System.out.println("Watch out: the tread is ready to tear!");
-            setTearingColor();
+        //Если оставшаяся длина составляет более трети от исходной
+        else if (super.maxLength - super.getLength() >= super.maxLength / 3) {
+            return Constants.THREADS_STATES.NORMAL;
         }
+
+        System.out.println("Watch out: the tread is ready to tear!");
+        setTearingColor();
+        return Constants.THREADS_STATES.READY_TO_TEAR;
     }
 
     private void setTearingColor() {
@@ -45,12 +48,6 @@ public class TearingThread extends Thread {
 
     private void setDefaultColor() {
         this.color = Color.BLACK;
-    }
-
-    public double getLength() {
-        return Math.sqrt(Math.pow(firstKnot.getPosition().getX() - secondKnot.getPosition().getX(), 2)
-                +
-                Math.pow(firstKnot.getPosition().getY() - secondKnot.getPosition().getY(), 2));
     }
 
     public Color getColor() {

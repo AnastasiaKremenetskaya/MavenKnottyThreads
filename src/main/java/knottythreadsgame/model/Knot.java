@@ -1,5 +1,6 @@
 package knottythreadsgame.model;
 
+import knottythreadsgame.constants.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Point2D;
@@ -28,14 +29,29 @@ public class Knot {
     }
 
     public void setPosition(Point2D position) {
+        Point2D previousPosition = this.position;
         this.position = position;
 
+        if (this.treadsAreBreakingRestrictions()) {
+            this.position = previousPosition;
+        }
+    }
+
+    /**
+     * Проверить, возможно ли задать узлу желаемую позицию
+     *
+     * @return
+     */
+    private boolean treadsAreBreakingRestrictions() {
         for (Thread thread : threads) {
-            //Проверить ограничения для рвущихся нитей
-            if (thread instanceof TearingThread) {
-                ((TearingThread) thread).checkTreadState();
+            //Проверить ограничения для нитей с ограниченной длиной
+            if (thread instanceof RestrictedThread) {
+                if (((RestrictedThread) thread).checkTreadState() == Constants.THREADS_STATES.REACHED_MAX_LENGTH)
+                    return true;
             }
         }
+
+        return false;
     }
 
     public Point2D getPosition() {

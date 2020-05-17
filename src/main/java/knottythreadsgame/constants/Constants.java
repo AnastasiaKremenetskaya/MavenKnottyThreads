@@ -10,4 +10,6 @@ public class Constants {
     public static final int IMPOSSIBLE_KNOTS_AMOUNT = 14;
 
     public static final double MAX_LENGTH_COEFFICIENT = 1.5;
+
+    public enum THREADS_STATES {NORMAL, READY_TO_TEAR, REACHED_MAX_LENGTH, TEARED};
 }

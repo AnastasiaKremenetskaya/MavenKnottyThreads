@@ -70,9 +70,9 @@ public class ImpossibleSchemaTests {
     @Test
     public void one_tread_teared() {
         testSchema.getSelectedKnot(new Point2D.Double(149.0, 235.0));
-        testSchema.dragSelectedKnot(new Point2D.Double(149.0, 390.0));
+        testSchema.dragSelectedKnot(new Point2D.Double(100.0, 390.0));
 
-        verify(schemaObserver).treadTeared();
+        verify(schemaObserver, atLeastOnce()).treadTeared();
     }
 
     @Test

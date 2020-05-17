@@ -31,8 +31,8 @@ public class SchemaFactory {
     private List<Thread> connectKnots(List<Knot> knots) {
         List<Thread> threads = new ArrayList<>();
 
-        //Для уровней easy и medium генерируем растягиваемые нити
-        if (knots.size() < Constants.HARD_KNOTS_AMOUNT) {
+        //Для уровня easy генерируем растягиваемые нити
+        if (knots.size() < Constants.MEDIUM_KNOTS_AMOUNT) {
             Thread newThread;
 
             //Соединить все вершины по очереди
@@ -45,6 +45,24 @@ public class SchemaFactory {
 
             //Соединить начальный и конечный узел
             newThread = new Thread(knots.get(0), knots.get(knots.size() - 1));
+            threads.add(newThread);
+            knots.get(0).addThread(newThread);
+            knots.get(knots.size() - 1).addThread(newThread);
+        }
+
+        //Для уровня medium генерируем нити с ограниченной длиной
+        else if (knots.size() == Constants.MEDIUM_KNOTS_AMOUNT) {
+            RestrictedThread newThread;
+
+            //Соединить все вершины по очереди
+            for (int i = 0; i < knots.size() - 1; i++) {
+                newThread = new RestrictedThread(knots.get(i), knots.get(i + 1));
+                threads.add(newThread);
+                knots.get(i).addThread(newThread);
+                knots.get(i + 1).addThread(newThread);
+            }
+            //Соединить начальный и конечный узел
+            newThread = new RestrictedThread(knots.get(0), knots.get(knots.size() - 1));
             threads.add(newThread);
             knots.get(0).addThread(newThread);
             knots.get(knots.size() - 1).addThread(newThread);

@@ -1,3 +1,4 @@
+import knottythreadsgame.constants.Constants;
 import knottythreadsgame.listeners.ThreadEventListener;
 import knottythreadsgame.model.Knot;
 import knottythreadsgame.model.TearingThread;
@@ -33,6 +34,25 @@ public class TearingThreadTests {
     }
 
     @Test
+    public void thread_has_normal_length() {
+        assertSame(Constants.THREADS_STATES.NORMAL, testTearingThread.checkTreadState());
+    }
+
+    @Test
+    public void thread_is_ready_to_tear() {
+        firstKnot.setPosition(new Point2D.Double(100.0, 390.0));
+
+        assertSame(Constants.THREADS_STATES.READY_TO_TEAR, testTearingThread.checkTreadState());
+    }
+
+    @Test
+    public void thread_teared() {
+        firstKnot.setPosition(new Point2D.Double(40.0, 1000.0));
+
+        assertSame(Constants.THREADS_STATES.TEARED, testTearingThread.checkTreadState());
+    }
+
+    @Test
     public void sets_thread_with_right_color() {
         assertSame(testTearingThread.getColor(), Color.BLACK);
     }
@@ -53,6 +73,6 @@ public class TearingThreadTests {
     public void tears() {
         firstKnot.setPosition(new Point2D.Double(0.0, 1000.0));
 
-        verify(threadObserver).treadTeared();
+        verify(threadObserver, atLeastOnce()).treadTeared();
     }
 }

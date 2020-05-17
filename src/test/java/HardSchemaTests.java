@@ -76,7 +76,7 @@ public class HardSchemaTests {
         testSchema.getSelectedKnot(new Point2D.Double(149.0, 235.0));
         testSchema.dragSelectedKnot(new Point2D.Double(240.0, 240.0));
 
-        verify(schemaObserver).treadTeared();
+        verify(schemaObserver, atLeastOnce()).treadTeared();
     }
 
     @Test
