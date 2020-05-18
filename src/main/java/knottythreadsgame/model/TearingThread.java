@@ -27,6 +27,7 @@ public class TearingThread extends Thread {
 
         if (this.getLength() >= this.maxLength) {
             for (ThreadEventListener threadEventListener : threadEventListeners) {
+                System.out.println("Alas, the tread teared!");
                 threadEventListener.treadTeared();
             }
         }

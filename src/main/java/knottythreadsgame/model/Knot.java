@@ -1,5 +1,7 @@
 package knottythreadsgame.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,11 @@ public class Knot {
      *
      * @param thread
      */
-    public void addThread(Thread thread) {
+    public void addThread(@NotNull Thread thread) {
+        if (thread.getFirstKnot() != this && thread.getSecondKnot() != this) {
+            throw new IllegalArgumentException("Error: The thread is connected with another knots");
+        }
+
         this.threads.add(thread);
     }
 
@@ -34,5 +40,9 @@ public class Knot {
 
     public Point2D getPosition() {
         return position;
+    }
+
+    public List<Thread> getThreads() {
+        return this.threads;
     }
 }
