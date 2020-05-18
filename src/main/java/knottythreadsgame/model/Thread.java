@@ -50,6 +50,12 @@ public class Thread {
         return false;
     }
 
+    public double getLength() {
+        return Math.sqrt(Math.pow(firstKnot.getPosition().getX() - secondKnot.getPosition().getX(), 2)
+                +
+                Math.pow(firstKnot.getPosition().getY() - secondKnot.getPosition().getY(), 2));
+    }
+
     /**
      * Найти ориентацию по четырем точкам
      *

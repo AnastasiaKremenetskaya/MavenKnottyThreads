@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class RestrictedThread extends Thread {
     protected double maxLength;
+    protected Constants.THREADS_STATES threadState;
 
     public RestrictedThread(@NotNull Knot firstKnot, @NotNull Knot secondKnot) {
         super(firstKnot, secondKnot);
@@ -16,17 +17,20 @@ public class RestrictedThread extends Thread {
      * Проверить состояние нити:
      * испустить событие в случае порватия, окраситься в случае максимального натяжения
      */
-    public Constants.THREADS_STATES checkTreadState() {
-        if (this.getLength() >= this.maxLength) {
+    public Constants.THREADS_STATES setNewState() {
+        if (super.getLength() >= this.maxLength) {
             System.out.println("Thread reached it's max length");
-            return Constants.THREADS_STATES.REACHED_MAX_LENGTH;
+            this.threadState = Constants.THREADS_STATES.REACHED_MAX_LENGTH;
         }
-        return Constants.THREADS_STATES.NORMAL;
+        else {
+            this.threadState = Constants.THREADS_STATES.NORMAL;
+        }
+
+        return this.threadState;
     }
 
-    public double getLength() {
-        return Math.sqrt(Math.pow(firstKnot.getPosition().getX() - secondKnot.getPosition().getX(), 2)
-                +
-                Math.pow(firstKnot.getPosition().getY() - secondKnot.getPosition().getY(), 2));
+    public Constants.THREADS_STATES getState() {
+        return this.threadState;
     }
+
 }
