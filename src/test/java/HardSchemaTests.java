@@ -1,4 +1,4 @@
-import knottythreadsgame.constants.Constants;
+import knottythreadsgame.constants.GameSetUpConstants;
 import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.model.Schema;
 import knottythreadsgame.model.SchemaFactory;
@@ -39,7 +39,7 @@ public class HardSchemaTests {
 
     @Test
     public void correct_knots_amount() {
-        assertEquals (testSchema.getKnots().size(), Constants.HARD_KNOTS_AMOUNT);
+        assertEquals (testSchema.getKnots().size(), GameSetUpConstants.HARD_KNOTS_AMOUNT);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class HardSchemaTests {
 
     @Test
     public void all_knots_are_connected() {
-        assertEquals(Constants.HARD_KNOTS_AMOUNT, testSchema.getThreads().size());
+        assertEquals(GameSetUpConstants.HARD_KNOTS_AMOUNT, testSchema.getThreads().size());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package knottythreadsgame.model;
 
-import knottythreadsgame.constants.Constants;
+import knottythreadsgame.constants.GameSetUpConstants;
+import knottythreadsgame.constants.ThreadConstants;
 import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.listeners.ThreadEventListener;
 
@@ -101,9 +102,9 @@ public class Schema {
 
     private boolean belongsField(Point2D point2D) {
         return point2D.getX() > -1 &&
-                point2D.getX() < Constants.FIELD_WIDTH &&
+                point2D.getX() < GameSetUpConstants.FIELD_WIDTH &&
                 point2D.getY() > -1 &&
-                point2D.getY() < Constants.FIELD_HEIGHT;
+                point2D.getY() < GameSetUpConstants.FIELD_HEIGHT;
     }
 
     private void addObserversToTearingThreads() {

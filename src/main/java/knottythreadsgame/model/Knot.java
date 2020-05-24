@@ -1,6 +1,6 @@
 package knottythreadsgame.model;
 
-import knottythreadsgame.constants.Constants;
+import knottythreadsgame.constants.ThreadConstants;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Point2D;
@@ -46,7 +46,7 @@ public class Knot {
         for (Thread thread : threads) {
             //Проверить ограничения для нитей с ограниченной длиной
             if (thread instanceof RestrictedThread) {
-                if (((RestrictedThread) thread).setNewState() == Constants.THREADS_STATES.REACHED_MAX_LENGTH)
+                if (((RestrictedThread) thread).setNewState() == ThreadConstants.THREADS_STATES.REACHED_MAX_LENGTH)
                     return true;
             }
         }

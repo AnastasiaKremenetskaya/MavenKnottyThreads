@@ -1,6 +1,6 @@
 package knottythreadsgame.model;
 
-import knottythreadsgame.constants.Constants;
+import knottythreadsgame.constants.GameSetUpConstants;
 import knottythreadsgame.json_handler.ReadJSON;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class SchemaFactory {
         List<Thread> threads = new ArrayList<>();
 
         //Для уровня easy генерируем растягиваемые нити
-        if (knots.size() < Constants.MEDIUM_KNOTS_AMOUNT) {
+        if (knots.size() < GameSetUpConstants.MEDIUM_KNOTS_AMOUNT) {
             Thread newThread;
 
             //Соединить все вершины по очереди
@@ -51,7 +51,7 @@ public class SchemaFactory {
         }
 
         //Для уровня medium генерируем нити с ограниченной длиной
-        else if (knots.size() == Constants.MEDIUM_KNOTS_AMOUNT) {
+        else if (knots.size() == GameSetUpConstants.MEDIUM_KNOTS_AMOUNT) {
             RestrictedThread newThread;
 
             //Соединить все вершины по очереди

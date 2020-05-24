@@ -1,5 +1,6 @@
 package knottythreadsgame.view.widgets;
 
+import knottythreadsgame.constants.ThreadConstants;
 import knottythreadsgame.model.TearingThread;
 import knottythreadsgame.model.Thread;
 
@@ -30,7 +31,12 @@ public class ThreadWidget extends JPanel {
         g2.setStroke(new BasicStroke(5));
         Color color = g.getColor();
         if (this.thread instanceof TearingThread) {
-            g2.setColor(((TearingThread) this.thread).getColor());
+            if (((TearingThread) this.thread).getState() == ThreadConstants.THREADS_STATES.READY_TO_TEAR) {
+                g2.setColor(Color.RED);
+            }
+            else {
+                g2.setColor(Color.BLACK);
+            }
         }
         else {
             g2.setColor(Color.DARK_GRAY);

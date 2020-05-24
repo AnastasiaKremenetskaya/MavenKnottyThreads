@@ -1,4 +1,4 @@
-import knottythreadsgame.constants.Constants;
+import knottythreadsgame.constants.GameSetUpConstants;
 import knottythreadsgame.listeners.SchemaEventListener;
 import knottythreadsgame.model.*;
 import knottythreadsgame.model.Thread;
@@ -35,7 +35,7 @@ public class ImpossibleSchemaTests {
 
     @Test
     public void correct_knots_amount() {
-        assertEquals(testSchema.getKnots().size(), Constants.IMPOSSIBLE_KNOTS_AMOUNT);
+        assertEquals(testSchema.getKnots().size(), GameSetUpConstants.IMPOSSIBLE_KNOTS_AMOUNT);
     }
 
     @Test
@@ -57,7 +57,7 @@ public class ImpossibleSchemaTests {
 
     @Test
     public void all_knots_are_connected() {
-        assertEquals(Constants.IMPOSSIBLE_KNOTS_AMOUNT, testSchema.getThreads().size());
+        assertEquals(GameSetUpConstants.IMPOSSIBLE_KNOTS_AMOUNT, testSchema.getThreads().size());
     }
 
     @Test
