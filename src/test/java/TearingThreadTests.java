@@ -33,26 +33,28 @@ public class TearingThreadTests {
 
     @Test
     public void thread_has_normal_length() {
-        assertSame(ThreadConstants.THREADS_STATES.NORMAL, testTearingThread.setNewState());
+        assertSame(ThreadConstants.THREADS_STATES.NORMAL, testTearingThread.getState());
     }
 
     @Test
     public void thread_is_ready_to_tear() {
         firstKnot.setPosition(new Point2D.Double(100.0, 390.0));
 
-        assertSame(ThreadConstants.THREADS_STATES.READY_TO_TEAR, testTearingThread.setNewState());
+        assertSame(ThreadConstants.THREADS_STATES.READY_TO_TEAR, testTearingThread.getState());
     }
 
     @Test
     public void thread_teared() {
         firstKnot.setPosition(new Point2D.Double(40.0, 1000.0));
 
-        assertSame(ThreadConstants.THREADS_STATES.TEARED, testTearingThread.setNewState());
+        assertSame(ThreadConstants.THREADS_STATES.TEARED, testTearingThread.getState());
     }
 
     @Test
     public void sets_thread_with_right_state() {
-        assertSame(testTearingThread.getState(), ThreadConstants.THREADS_STATES.NORMAL);
+        testTearingThread.setNewState();
+
+        assertSame(ThreadConstants.THREADS_STATES.NORMAL, testTearingThread.getState());
     }
 
     @Test

@@ -9,15 +9,13 @@ import java.util.ArrayList;
 public class TearingThread extends RestrictedThread {
     public TearingThread(@NotNull Knot firstKnot, @NotNull Knot secondKnot) {
         super(firstKnot, secondKnot);
-
-        this.threadState = ThreadConstants.THREADS_STATES.NORMAL;
     }
 
     /**
-     * Проверить состояние нити:
-     * испустить событие в случае порватия, окраситься в случае максимального натяжения
+     * Задать новое состояние нити
+     * испустить событие в случае порватия
      */
-    public ThreadConstants.THREADS_STATES setNewState() {
+    public void setNewState() {
         this.threadState = ThreadConstants.THREADS_STATES.NORMAL;
 
         //Если достигнута максимальная длина
@@ -37,8 +35,6 @@ public class TearingThread extends RestrictedThread {
             System.out.println("Watch out: the tread is ready to tear!");
             this.threadState = ThreadConstants.THREADS_STATES.READY_TO_TEAR;
         }
-
-        return this.threadState;
     }
 
     // ---------------------- Порождает события -----------------------------

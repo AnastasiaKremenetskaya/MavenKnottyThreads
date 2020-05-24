@@ -46,7 +46,8 @@ public class Knot {
         for (Thread thread : threads) {
             //Проверить ограничения для нитей с ограниченной длиной
             if (thread instanceof RestrictedThread) {
-                if (((RestrictedThread) thread).setNewState() == ThreadConstants.THREADS_STATES.REACHED_MAX_LENGTH)
+                ((RestrictedThread) thread).setNewState();
+                if (((RestrictedThread) thread).getState() == ThreadConstants.THREADS_STATES.REACHED_MAX_LENGTH)
                     return true;
             }
         }
